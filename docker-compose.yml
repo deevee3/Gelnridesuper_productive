@@ -1,6 +1,26 @@
 version: "3.5"
 name: "super-productive-services"
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: super-productive-app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/super-productive?schema=public
+      - DIRECT_URL=postgresql://postgres:password@db:5432/super-productive?schema=public
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=your-secret-key
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
   db:
     image: "postgres"
     restart: always
